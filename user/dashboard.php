@@ -16,6 +16,7 @@ $user_image = $user_data['image'];
 $date = $user_data['date'];
 $user_email = $user_data['user_email'];
 $bio = $user_data['bio'];
+$background_image = $user_data['background_image'];
 $x = $user_data['x'];
 $facebook = $user_data['facebook'];
 $instagram = $user_data['instagram'];
@@ -60,11 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $updated_fields['youtube'] = $_POST['youtube'];
     }
 
-    // Handle profile picture
+    // Handle profile image upload
     if (!empty($_FILES['image']['name'])) {
         $image_file = $_FILES['image'];
         $image_extension = pathinfo($image_file['name'], PATHINFO_EXTENSION);
-        $allowed_extensions = ['jpg', 'jpeg', 'png'];
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
 
         if (in_array(strtolower($image_extension), $allowed_extensions)) {
             $image_name = uniqid() . '.' . $image_extension;
@@ -76,10 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
     }
 
-    // Handle background image
+    // Handle background image upload (ทำให้เหมือนกับการอัปโหลดโปรไฟล์)
     if (!empty($_FILES['background_image']['name'])) {
         $bg_file = $_FILES['background_image'];
         $bg_extension = pathinfo($bg_file['name'], PATHINFO_EXTENSION);
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
 
         if (in_array(strtolower($bg_extension), $allowed_extensions)) {
             $bg_name = uniqid() . '.' . $bg_extension;
@@ -218,24 +220,47 @@ $stmt->close();
             /* ปรับขนาดความสูงให้เหมาะสม */
         }
 
-        .profile-img {
-            width: 80px;
-            height: 80px;
+        .profile-banner {
+            background-size: cover;
+            background-position: center;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            height: 150px;
+            position: relative;
+        }
+
+        .profile-image {
+            width: 70px;
+            /* Smaller size */
+            height: 70px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -35px;
+            left: 90px;
+            transform: translateX(-50%);
             border: 3px solid white;
-            margin-top: -40px;
         }
 
         .profile-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        .profile-cardanlter {
             background-color: white;
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .profile-banner {
-            background: url('../uploads/<?php echo $background_image; ?>') center/cover no-repeat;
-            height: 150px;
-            border-radius: 15px 15px 0 0;
+        .profile-card h5 {
+            margin-top: 40px;
+        }
+
+        .profile-card p {
+            color: #666;
         }
 
         .form-control {
@@ -298,91 +323,102 @@ $stmt->close();
         <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
             <div class="container mt-4">
                 <h2>Edit User Profile</h2>
-                <div class="row">
-                    <!-- Profile Card -->
-                    <div class="col-md-6">
-                        <div class="profile-card">
-                            <!-- ภาพพื้นหลัง -->
-                            <div class="profile-banner"
-                                style="background-image: url('../uploads/<?php echo !empty($background_image) ? $background_image : 'default_bg.png'; ?>');">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <!-- Profile Card -->
+                        <div class="col-md-6">
+                            <div class="profile-card">
+                                <!-- ภาพพื้นหลัง -->
+                                <div class="profile-banner"
+                                
+                                    style="background-image: url('../uploads/<?php echo !empty($background_image) ? $background_image : 'default_bg.png'; ?>');">
+                                    <!-- รูปโปรไฟล์ -->
+                                    <img src="../uploads/<?php echo !empty($user_image) ? $user_image : 'default_image.png'; ?>"
+                                        class="rounded-circle profile-image">
+
+                                </div>
+
+                                <div class="text-center">
+                                    <!-- ข้อมูลโปรไฟล์ -->
+                                    <h5 class="mt-2" style="margin-top: 70px;">
+                                        <?php echo htmlspecialchars($user_name); ?>
+                                    </h5>
+                                    <p><?php echo htmlspecialchars($bio); ?></p>
+
+                                    <!-- ปุ่มกด -->
+                                    <button type="button" class="btn btn-secondary">Cancel</button>
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="text-center">
-                                <!-- รูปโปรไฟล์ -->
-                                <img src="../uploads/<?php echo !empty($user_image) ? $user_image : 'default_image.png'; ?>"
-                                    class="rounded-circle profile-image">
-
-                                <!-- ข้อมูลโปรไฟล์ -->
-                                <h5 class="mt-2">Your Profile</h5>
-                                <p>Bio</p>
-
-                                <!-- ปุ่มกด -->
-                                <button class="btn btn-secondary">Cancel</button>
-                                <button class="btn btn-success">Save</button>
+                        <!-- Bio -->
+                        <div class="col-md-6">
+                            <div class="profile-cardanlter" style="margin-top: 50px;">
+                                <h5>Bio</h5>
+                                <textarea class="form-control" name="bio" rows="3"><?php echo $bio; ?></textarea>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Bio -->
-                    <div class="col-md-6">
-                        <div class="profile-card">
-                            <h5>Bio</h5>
-                            <textarea class="form-control" name="bio" rows="3"><?php echo $bio; ?></textarea>
+                    <div class="row">
+                        <!-- Personal Information -->
+                        <div class="col-md-6 mt-3">
+                            <div class="profile-cardanlter" style="margin-top: 10px;">
+                                <h5>Personal Information</h5>
+                                <label>Full Name</label>
+                                <input type="text" class="form-control mb-2" name="user_name"
+                                    value="<?php echo $user_name; ?>">
+                                <label>Email</label>
+                                <input type="email" class="form-control" name="user_email"
+                                    value="<?php echo $user_email; ?>">
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Personal Information -->
-                    <div class="col-md-6 mt-3">
-                        <div class="profile-card">
-                            <h5>Personal Information</h5>
-                            <label>Full Name</label>
-                            <input type="text" class="form-control mb-2" name="user_name"
-                                value="<?php echo $user_name; ?>">
-                            <label>Email</label>
-                            <input type="email" class="form-control" name="user_email"
-                                value="<?php echo $user_email; ?>">
-                        </div>
-                    </div>
-
-                    <!-- Social Media -->
-                    <div class="col-md-6 mt-3">
-                        <div class="profile-card">
-                            <h5>Social Media</h5>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i data-lucide="twitter"></i></span>
-                                <input type="text" class="form-control" name="x" value="<?php echo $x; ?>">
-                            </div>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i data-lucide="facebook"></i></span>
-                                <input type="text" class="form-control" name="facebook"
-                                    value="<?php echo $facebook; ?>">
-                            </div>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i data-lucide="instagram"></i></span>
-                                <input type="text" class="form-control" name="instagram"
-                                    value="<?php echo $instagram; ?>">
-                            </div>
-                            <div class="input-group">
-                                <span class="input-group-text"><i data-lucide="youtube"></i></span>
-                                <input type="text" class="form-control" name="youtube" value="<?php echo $youtube; ?>">
+                        <!-- Social Media -->
+                        <div class="col-md-6 mt-3">
+                            <div class="profile-cardanlter">
+                                <h5>Social Media</h5>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i data-lucide="twitter"></i></span>
+                                    <input type="text" class="form-control" name="x" value="<?php echo $x; ?>">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i data-lucide="facebook"></i></span>
+                                    <input type="text" class="form-control" name="facebook"
+                                        value="<?php echo $facebook; ?>">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i data-lucide="instagram"></i></span>
+                                    <input type="text" class="form-control" name="instagram"
+                                        value="<?php echo $instagram; ?>">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i data-lucide="youtube"></i></span>
+                                    <input type="text" class="form-control" name="youtube"
+                                        value="<?php echo $youtube; ?>">
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Upload Images -->
-                    <div class="col-md-12 mt-3">
-                        <div class="profile-card">
-                            <h5>Update Images</h5>
-                            <label>Profile Picture</label>
-                            <input type="file" class="form-control mb-2" name="image">
-                            <label>Background Image</label>
-                            <input type="file" class="form-control" name="background_image">
+                    <div class="row">
+                        <!-- Upload Images -->
+                        <div class="col-md-12 mt-3">
+                            <div class="profile-cardanlter">
+                                <h5>Update Images</h5>
+                                <label>Profile Picture</label>
+                                <input type="file" class="form-control mb-2" name="image">
+                                <label>Background Image</label>
+                                <input type="file" class="form-control" name="background_image">
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-
         </div>
+
+    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
