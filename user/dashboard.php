@@ -266,6 +266,78 @@ $stmt->close();
         .form-control {
             border-radius: 10px;
         }
+
+        /* Button Style */
+        .add-game-btn {
+            width: 150px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #79A89D;
+            border-radius: 15px;
+            cursor: pointer;
+            background-color: white;
+        }
+
+        .add-game-btn .plus-icon {
+            font-size: 40px;
+            font-weight: bold;
+            color: black;
+            border: 2px solid black;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-game-btn p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: black;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        input,
+        textarea,
+        button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+        }
     </style>
 </head>
 
@@ -298,7 +370,6 @@ $stmt->close();
                 <img src="../uploads/<?php echo !empty($user_image) ? $user_image : $default_image; ?>" alt="Profile"
                     class="rounded-circle" style="width: 60px; height: 60px;">
             </button>
-            <p><?php echo htmlspecialchars($user_name); ?></p>
         </div>
     </div>
 
@@ -309,11 +380,62 @@ $stmt->close();
             <p>Welcome to GEOgame! Your hub for gaming guides and news.</p>
         </div>
         <div class="tab-pane fade" id="v-pills-game" role="tabpanel" aria-labelledby="v-pills-game-tab">
-            <h2>Game</h2>
-            <p>Discover the latest games and reviews.</p>
+            <h2></h2>
+            <img src="../image/gameheader.png" alt="game header" style="width: 100%; height: 100%;">
+            <div class="add-game-btn" id="openModal" style="margin-top: 20px; margin-bottom: 20px; margin-left: 20px;">
+                <div class="plus-icon">+</div>
+                <p>add a game</p>
+            </div>
+            <h1>Game Community</h1>
+            <!-- Modal -->
+            <div class="modal" id="gameModal">
+                <div class="modal-content">
+                    <span class="close-btn" id="closeModal">&times;</span>
+                    <form action="create_game.php" method="POST" enctype="multipart/form-data">
+                        <label>Game Name:</label>
+                        <input type="text" name="gamename" required>
+
+                        <label>Game Profile Image:</label>
+                        <input type="file" name="gameprofile">
+
+                        <label>Game Background Image:</label>
+                        <input type="file" name="gamebg">
+
+                        <label>Average Game Data:</label>
+                        <textarea name="gameavgdata"></textarea>
+
+                        <label>Place Available for Sale:</label>
+                        <textarea name="gameplaceforsale"></textarea>
+
+                        <button type="submit">Create Game</button>
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                // Open and close modal
+                const openModal = document.getElementById("openModal");
+                const closeModal = document.getElementById("closeModal");
+                const modal = document.getElementById("gameModal");
+
+                openModal.addEventListener("click", () => {
+                    modal.style.display = "flex";
+                });
+
+                closeModal.addEventListener("click", () => {
+                    modal.style.display = "none";
+                });
+
+                window.addEventListener("click", (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = "none";
+                    }
+                });
+            </script>
         </div>
         <div class="tab-pane fade" id="v-pills-guide" role="tabpanel" aria-labelledby="v-pills-guide-tab">
-            <h2>Guide</h2>
+            <h2></h2>
+            <img src="../image/guideheader.png" alt="guide header" style="width: 100%; height: 100%;">
             <p>Find the best game guides and walkthroughs.</p>
         </div>
         <div class="tab-pane fade" id="v-pills-search" role="tabpanel" aria-labelledby="v-pills-search-tab">
@@ -330,7 +452,6 @@ $stmt->close();
                             <div class="profile-card">
                                 <!-- ภาพพื้นหลัง -->
                                 <div class="profile-banner"
-                                
                                     style="background-image: url('../uploads/<?php echo !empty($background_image) ? $background_image : 'default_bg.png'; ?>');">
                                     <!-- รูปโปรไฟล์ -->
                                     <img src="../uploads/<?php echo !empty($user_image) ? $user_image : 'default_image.png'; ?>"
@@ -346,8 +467,9 @@ $stmt->close();
                                     <p><?php echo htmlspecialchars($bio); ?></p>
 
                                     <!-- ปุ่มกด -->
-                                    <button type="button" class="btn btn-secondary">Cancel</button>
-                                    <button type="submit" class="btn btn-success">Save</button>
+
+                                    <button type="submit" class="btn btn-success"
+                                        style="margin-bottom: 10px;">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -356,14 +478,14 @@ $stmt->close();
                         <div class="col-md-6">
                             <div class="profile-cardanlter" style="margin-top: 50px;">
                                 <h5>Bio</h5>
-                                <textarea class="form-control" name="bio" rows="3"><?php echo $bio; ?></textarea>
+                                <textarea class="form-control" name="bio" rows="13"><?php echo $bio; ?></textarea>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <!-- Personal Information -->
-                        <div class="col-md-6 mt-3">
+                        <div class="col-md-6 mt-5">
                             <div class="profile-cardanlter" style="margin-top: 10px;">
                                 <h5>Personal Information</h5>
                                 <label>Full Name</label>
