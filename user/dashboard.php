@@ -392,7 +392,6 @@ $stmt->close();
         .news-description {
             flex: 1;
         }
-
     </style>
 </head>
 
@@ -432,390 +431,410 @@ $stmt->close();
             </li>
         </div>
     </div>
+    <div class="container mt-4">
+        <!-- Tab Content -->
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab"
+                style="">
+                <h2></h2>
+                <!-- Fetch and display game profiles -->
+                <div class="game-profiles">
+                    <?php
+                    $game_query = "SELECT gamename, gameprofile FROM gamecommu";
+                    $game_result = $con->query($game_query);
 
-    <!-- Tab Content -->
-    <div class="tab-content" id="v-pills-tabContent">
-        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab"
-            style="margin-left: 201px;">
-            <h2></h2>
-            <!-- Fetch and display game profiles -->
-            <div class="game-profiles">
-                <?php
-                $game_query = "SELECT gamename, gameprofile FROM gamecommu";
-                $game_result = $con->query($game_query);
-
-                if ($game_result && $game_result->num_rows > 0) {
-                    while ($game_row = $game_result->fetch_assoc()) {
-                        $game_name = $game_row['gamename'];
-                        $game_profile = $game_row['gameprofile'];
-                        echo '<div class="game-profile" style="margin-top: 20px; margin-bottom: 20px; margin-left: 20px;">';
-                        echo '<a href="game_page.php?game=' . urlencode($game_name) . '">';
-                        echo '<img src="../uploads/' . $game_profile . '" alt="' . $game_name . '" class="game-profile-image">';
-                        echo '<h3 class="game-profile-name">' . $game_name . '</h3>';
-                        echo '</a>';
-                        echo '</div>';
+                    if ($game_result && $game_result->num_rows > 0) {
+                        while ($game_row = $game_result->fetch_assoc()) {
+                            $game_name = $game_row['gamename'];
+                            $game_profile = $game_row['gameprofile'];
+                            echo '<div class="game-profile" style="margin-top: 20px; margin-bottom: 20px; margin-left: 20px;">';
+                            echo '<a href="game_page.php?game=' . urlencode($game_name) . '">';
+                            echo '<img src="../uploads/' . $game_profile . '" alt="' . $game_name . '" class="game-profile-image">';
+                            echo '<h3 class="game-profile-name">' . $game_name . '</h3>';
+                            echo '</a>';
+                            echo '</div>';
+                        }
+                    } else {
+                        echo '<p>No games found.</p>';
                     }
-                } else {
-                    echo '<p>No games found.</p>';
-                }
-                ?>
-            </div>
-            <img src="../image/homeheader.png" alt="game header" style="width: 100%; height: 100%; margin-top: 20px;">
-            <h1 style="margin-left: 100px; margin-top: 60px;">Latest News</h1>
-            <hr style="margin-left: 100px; margin-right: 100px;">
-            <div class="latest-news">
-                <img src="../image/new1.png" alt="News Image">
-                <div class="news-description">
-                    <h3>The Sims Legacy Collection is Having Major Crashing Problems</h3>
-                    <p>The Sims Legacy Collections are having significant crashing problems. Numerous fans of The Sims
-                        and The Sims 2 are becoming increasingly angry with the current state of the games.
+                    ?>
+                </div>
+                <img src="../image/homeheader.png" alt="game header"
+                    style="width: 100%; height: 100%; margin-top: 20px;">
+                <h1 style="margin-left: 100px; margin-top: 60px;">Latest News</h1>
+                <hr style="margin-left: 100px; margin-right: 100px;">
+                <div class="latest-news">
+                    <img src="../image/new1.png" alt="News Image">
+                    <div class="news-description">
+                        <h3>The Sims Legacy Collection is Having Major Crashing Problems</h3>
+                        <p>The Sims Legacy Collections are having significant crashing problems. Numerous fans of The
+                            Sims
+                            and The Sims 2 are becoming increasingly angry with the current state of the games.
 
-                        Sims fans expressed excitement when EA announced that The Sims and The Sims 2 would be released
-                        in Legacy Collections that would bring back the base games and the vast majority of DLC content
-                        to current systems. However, it seems that response has been short-lived, as many players have
-                        shared their frustration with the state of the titles.</p>
+                            Sims fans expressed excitement when EA announced that The Sims and The Sims 2 would be
+                            released
+                            in Legacy Collections that would bring back the base games and the vast majority of DLC
+                            content
+                            to current systems. However, it seems that response has been short-lived, as many players
+                            have
+                            shared their frustration with the state of the titles.</p>
+                    </div>
+                </div>
+                <div class="latest-news">
+                    <img src="../image/new2.png" alt="News Image" style="margin-top: 20px;">
+                    <div class="news-description" style="margin-top: 20px;">
+                        <h3>Rainbow Six Siege Teases ‘Major Evolution’ for the Game</h3>
+                        <p>Rainbow Six Siege has announced a showcase that will take place on March 13 to talk about
+                            Rainbow
+                            Six Siege X. Ubisoft has been supporting Rainbow Six Siege with updates since its release in
+                            2015, bringing content and features that have made the shooter one of the company's most
+                            successful games.</p>
+                    </div>
+                </div>
+                <div class="latest-news">
+                    <img src="../image/new3.png" alt="News Image" style="margin-top: 20px;">
+                    <div class="news-description" style="margin-top: 20px;">
+                        <h3>GTA 6 PC Port Coming Sooner Than Expected, Corsair Believes</h3>
+                        <p>The Grand Theft Auto 6 PC port might arrive in early 2026, according to a senior Corsair
+                            Gaming
+                            official. This prediction suggests GTA 6 might reach PC much sooner than many fans are
+                            expecting.
+
+                            GTA 6 was originally announced for the PS5 and Xbox Series X/S in early December 2023.
+                            Take-Two
+                            interactive later revealed that the game was targeting a fall 2025 launch. While the
+                            publisher
+                            has already reiterated this release window on several occasions, it has yet to mention
+                            anything
+                            official about the game's potential PC port, which many industry watchers agree is only a
+                            question of time.</p>
+                    </div>
+                </div>
+                <div class="latest-news">
+                    <img src="../image/new4.png" alt="News Image" style="margin-top: 20px;">
+                    <div class="news-description" style="margin-top: 20px;">
+                        <h3>Zenless Zone Zero Leak Teases Possible New Character</h3>
+                        <p>A Zenless Zone Zero leak is teasing a possible new character named Jufufu. Known for its
+                            unique
+                            fighting game mechanics, Zenless Zone Zero's character roster has diverse abilities that
+                            serve
+                            different purposes, from buffing allies to dealing significant damage to enemies.
+
+                            As Zenless Zone Zero's story continues to progress, siblings Belle and Wise, also known as
+                            Phaethon, also work with new Agents in various Hollow-related missions. Usually, the
+                            character
+                            banners give players an idea of the factions that will be featured in the update. For
+                            example,
+                            the release of the upcoming Version 1.6 character Trigger, who's an Obol Squad member, could
+                            be
+                            a sign that Zenless Zone Zero might finally</p>
+                    </div>
                 </div>
             </div>
-            <div class="latest-news">
-                <img src="../image/new2.png" alt="News Image" style="margin-top: 20px;">
-                <div class="news-description" style="margin-top: 20px;">
-                    <h3>Rainbow Six Siege Teases ‘Major Evolution’ for the Game</h3>
-                    <p>Rainbow Six Siege has announced a showcase that will take place on March 13 to talk about Rainbow
-                        Six Siege X. Ubisoft has been supporting Rainbow Six Siege with updates since its release in
-                        2015, bringing content and features that have made the shooter one of the company's most
-                        successful games.</p>
+            <div class="tab-pane fade" id="v-pills-game" role="tabpanel" aria-labelledby="v-pills-game-tab"
+                style="">
+                <h2></h2>
+                <img src="../image/gameheader.png" alt="game header" style="width: 100%; height: 100%;">
+                <div class="add-game-btn" id="openModal"
+                    style="margin-top: 20px; margin-bottom: 20px; margin-left: 90px;">
+                    <div class="plus-icon">+</div>
+                    <p>add a game</p>
                 </div>
-            </div>
-            <div class="latest-news">
-                <img src="../image/new3.png" alt="News Image" style="margin-top: 20px;">
-                <div class="news-description" style="margin-top: 20px;">
-                    <h3>GTA 6 PC Port Coming Sooner Than Expected, Corsair Believes</h3>
-                    <p>The Grand Theft Auto 6 PC port might arrive in early 2026, according to a senior Corsair Gaming
-                        official. This prediction suggests GTA 6 might reach PC much sooner than many fans are
-                        expecting.
+                <h1 style="margin-left: 90px;">Game Community</h1>
+                <!-- Fetch and display game profiles -->
+                <div class="game-profiles">
+                    <?php
+                    $game_query = "SELECT gamename, gameprofile FROM gamecommu";
+                    $game_result = $con->query($game_query);
 
-                        GTA 6 was originally announced for the PS5 and Xbox Series X/S in early December 2023. Take-Two
-                        interactive later revealed that the game was targeting a fall 2025 launch. While the publisher
-                        has already reiterated this release window on several occasions, it has yet to mention anything
-                        official about the game's potential PC port, which many industry watchers agree is only a
-                        question of time.</p>
-                </div>
-            </div>
-            <div class="latest-news">
-                <img src="../image/new4.png" alt="News Image" style="margin-top: 20px;">
-                <div class="news-description" style="margin-top: 20px;">
-                    <h3>Zenless Zone Zero Leak Teases Possible New Character</h3>
-                    <p>A Zenless Zone Zero leak is teasing a possible new character named Jufufu. Known for its unique
-                        fighting game mechanics, Zenless Zone Zero's character roster has diverse abilities that serve
-                        different purposes, from buffing allies to dealing significant damage to enemies.
-
-                        As Zenless Zone Zero's story continues to progress, siblings Belle and Wise, also known as
-                        Phaethon, also work with new Agents in various Hollow-related missions. Usually, the character
-                        banners give players an idea of the factions that will be featured in the update. For example,
-                        the release of the upcoming Version 1.6 character Trigger, who's an Obol Squad member, could be
-                        a sign that Zenless Zone Zero might finally</p>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="v-pills-game" role="tabpanel" aria-labelledby="v-pills-game-tab"
-            style="margin-left: 201px;">
-            <h2></h2>
-            <img src="../image/gameheader.png" alt="game header" style="width: 100%; height: 100%;">
-            <div class="add-game-btn" id="openModal" style="margin-top: 20px; margin-bottom: 20px; margin-left: 90px;">
-                <div class="plus-icon">+</div>
-                <p>add a game</p>
-            </div>
-            <h1 style="margin-left: 90px;">Game Community</h1>
-            <!-- Fetch and display game profiles -->
-            <div class="game-profiles">
-                <?php
-                $game_query = "SELECT gamename, gameprofile FROM gamecommu";
-                $game_result = $con->query($game_query);
-
-                if ($game_result && $game_result->num_rows > 0) {
-                    while ($game_row = $game_result->fetch_assoc()) {
-                        $game_name = $game_row['gamename'];
-                        $game_profile = $game_row['gameprofile'];
-                        echo '<div class="game-profile" style="margin-top: 20px; margin-bottom: 20px; margin-left: 20px;">';
-                        echo '<a href="game_page.php?game=' . urlencode($game_name) . '">';
-                        echo '<img src="../uploads/' . $game_profile . '" alt="' . $game_name . '" class="game-profile-image">';
-                        echo '<h3 class="game-profile-name">' . $game_name . '</h3>';
-                        echo '</a>';
-                        echo '</div>';
+                    if ($game_result && $game_result->num_rows > 0) {
+                        while ($game_row = $game_result->fetch_assoc()) {
+                            $game_name = $game_row['gamename'];
+                            $game_profile = $game_row['gameprofile'];
+                            echo '<div class="game-profile" style="margin-top: 20px; margin-bottom: 20px; margin-left: 20px;">';
+                            echo '<a href="game_page.php?game=' . urlencode($game_name) . '">';
+                            echo '<img src="../uploads/' . $game_profile . '" alt="' . $game_name . '" class="game-profile-image">';
+                            echo '<h3 class="game-profile-name">' . $game_name . '</h3>';
+                            echo '</a>';
+                            echo '</div>';
+                        }
+                    } else {
+                        echo '<h1>No games found.</h1>';
                     }
-                } else {
-                    echo '<h1>No games found.</h1>';
-                }
-                ?>
+                    ?>
+                </div>
+                <!-- Modal -->
+                <div class="modal" id="gameModal">
+                    <div class="modal-content">
+                        <span class="close-btn" id="closeModal">&times;</span>
+                        <form action="create_game.php" method="POST" enctype="multipart/form-data"
+                            style="display: flex; flex-direction: column; gap: 15px;">
+                            <label style="color: #578E7E; font-weight: bold;">Game Name:</label>
+                            <input type="text" name="gamename" class="form-control"
+                                style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;" required>
+
+                            <label style="color: #578E7E; font-weight: bold;">Game Profile Image:</label>
+                            <input type="file" name="gameprofile" class="form-control"
+                                style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;">
+
+                            <label style="color: #578E7E; font-weight: bold;">Game Background Image:</label>
+                            <input type="file" name="gamebg" class="form-control"
+                                style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;">
+
+                            <label style="color: #578E7E; font-weight: bold;">Average Game Data:</label>
+                            <textarea name="gameavgdata" class="form-control"
+                                style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;"></textarea>
+
+                            <label style="color: #578E7E; font-weight: bold;">Place Available for Sale:</label>
+                            <textarea name="gameplaceforsale" class="form-control"
+                                style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;"></textarea>
+
+                            <button type="submit" class="btn"
+                                style="background-color: #578E7E; color: white; border-radius: 5px; padding: 10px;">Create
+                                Game</button>
+                        </form>
+                    </div>
+                </div>
+
+                <script>
+                    // Open and close modal
+                    const openModal = document.getElementById("openModal");
+                    const closeModal = document.getElementById("closeModal");
+                    const modal = document.getElementById("gameModal");
+
+                    openModal.addEventListener("click", () => {
+                        modal.style.display = "flex";
+                    });
+
+                    closeModal.addEventListener("click", () => {
+                        modal.style.display = "none";
+                    });
+
+                    window.addEventListener("click", (event) => {
+                        if (event.target === modal) {
+                            modal.style.display = "none";
+                        }
+                    });
+                </script>
+            </div>
+            <div class="tab-pane fade" id="v-pills-guide" role="tabpanel" aria-labelledby="v-pills-guide-tab"
+                style="">
+                <h2></h2>
+                <img src="../image/guideheader.png" alt="guide header" style="width: 100%; height: 100%;">
+                <div class="add-game-btn" id="openGuideModal"
+                    style="margin-top: 20px; margin-bottom: 20px; margin-left: 90px;">
+                    <div class="plus-icon">+</div>
+                    <p>add a guide</p>
+                </div>
+                <h1 style="margin-left: 90px;">Guide</h1>
+                <!-- Fetch and display guide profiles -->
+                <div class="guide-profiles" style="margin-left: 90px;">
+                    <?php
+                    $guide_query = "SELECT g.guidename, g.guideprofile, u.user_name FROM guide g JOIN users u ON g.user_id = u.id";
+                    $guide_result = $con->query($guide_query);
+
+                    if ($guide_result && $guide_result->num_rows > 0) {
+                        $count = 0;
+                        while ($guide_row = $guide_result->fetch_assoc()) {
+                            $guide_name = $guide_row['guidename'];
+                            $guide_profile = $guide_row['guideprofile'];
+                            $user_name = $guide_row['user_name'];
+
+                            if ($count % 2 == 0) {
+                                echo '<div class="row" style="margin-bottom: 20px;">';
+                            }
+
+                            echo '<div class="col-md-6">';
+                            echo '<div class="card" style="background-color: #578E7E; color: white; padding: 10px; border-radius: 5px;">';
+                            echo '<img src="../uploads/' . $guide_profile . '" alt="' . $guide_name . '" class="card-img-top" style="border-radius: 5px; width: 100px; height: 100px;">';
+                            echo '<div class="card-body">';
+                            echo '<h5 class="card-title">' . $guide_name . '</h5>';
+                            echo '<p class="card-text">by ' . $user_name . '</p>';
+                            echo '<a href="guide_page.php?guide=' . urlencode($guide_name) . '" class="btn btn-light">View Details</a>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+
+                            if ($count % 2 == 1) {
+                                echo '</div>';
+                            }
+
+                            $count++;
+                        }
+
+                        if ($count % 2 != 0) {
+                            echo '</div>';
+                        }
+                    } else {
+                        echo '<p>No guides found.</p>';
+                    }
+                    ?>
+                </div>
             </div>
             <!-- Modal -->
-            <div class="modal" id="gameModal">
+            <div class="modal" id="guideModal">
                 <div class="modal-content">
-                    <span class="close-btn" id="closeModal">&times;</span>
-                    <form action="create_game.php" method="POST" enctype="multipart/form-data"
+                    <span class="close-btn" id="closeGuideModal">&times;</span>
+                    <form action="create_guide.php" method="POST" enctype="multipart/form-data"
                         style="display: flex; flex-direction: column; gap: 15px;">
-                        <label style="color: #578E7E; font-weight: bold;">Game Name:</label>
-                        <input type="text" name="gamename" class="form-control"
+                        <label style="color: #578E7E; font-weight: bold;">Select Game:</label>
+                        <select name="game_id">
+                            <?php
+                            $result = $con->query("SELECT game_id, gamename FROM gamecommu");
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<option value='{$row['game_id']}'>{$row['gamename']}</option>";
+                            }
+                            ?>
+                        </select>
+
+                        <label for="guidename" style="color: #578E7E; font-weight: bold;">Guide Name:</label>
+                        <input type="text" name="guidename" id="guidename" class="form-control"
                             style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;" required>
 
-                        <label style="color: #578E7E; font-weight: bold;">Game Profile Image:</label>
-                        <input type="file" name="gameprofile" class="form-control"
+                        <label for="guideprofile" style="color: #578E7E; font-weight: bold;">Guide Profile
+                            Image:</label>
+                        <input type="file" name="guideprofile" id="guideprofile" class="form-control"
                             style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;">
 
-                        <label style="color: #578E7E; font-weight: bold;">Game Background Image:</label>
-                        <input type="file" name="gamebg" class="form-control"
+                        <label for="guideimage" style="color: #578E7E; font-weight: bold;">Guide Image:</label>
+                        <input type="file" name="guideimage" id="guideimage" class="form-control"
                             style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;">
 
-                        <label style="color: #578E7E; font-weight: bold;">Average Game Data:</label>
-                        <textarea name="gameavgdata" class="form-control"
-                            style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;"></textarea>
-
-                        <label style="color: #578E7E; font-weight: bold;">Place Available for Sale:</label>
-                        <textarea name="gameplaceforsale" class="form-control"
+                        <label for="guidedescription" style="color: #578E7E; font-weight: bold;">Guide
+                            Description:</label>
+                        <textarea name="guidedescription" id="guidedescription" class="form-control"
                             style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;"></textarea>
 
                         <button type="submit" class="btn"
                             style="background-color: #578E7E; color: white; border-radius: 5px; padding: 10px;">Create
-                            Game</button>
+                            Guide</button>
                     </form>
                 </div>
             </div>
 
             <script>
                 // Open and close modal
-                const openModal = document.getElementById("openModal");
-                const closeModal = document.getElementById("closeModal");
-                const modal = document.getElementById("gameModal");
+                const openGuideModal = document.getElementById("openGuideModal");
+                const closeGuideModal = document.getElementById("closeGuideModal");
+                const guideModal = document.getElementById("guideModal");
 
-                openModal.addEventListener("click", () => {
-                    modal.style.display = "flex";
+                openGuideModal.addEventListener("click", () => {
+                    guideModal.style.display = "flex";
                 });
 
-                closeModal.addEventListener("click", () => {
-                    modal.style.display = "none";
+                closeGuideModal.addEventListener("click", () => {
+                    guideModal.style.display = "none";
                 });
 
                 window.addEventListener("click", (event) => {
-                    if (event.target === modal) {
-                        modal.style.display = "none";
+                    if (event.target === guideModal) {
+                        guideModal.style.display = "none";
                     }
                 });
             </script>
+
         </div>
-        <div class="tab-pane fade" id="v-pills-guide" role="tabpanel" aria-labelledby="v-pills-guide-tab"
-            style="margin-left: 202px;">
-            <h2></h2>
-            <img src="../image/guideheader.png" alt="guide header" style="width: 100%; height: 100%;">
-            <div class="add-game-btn" id="openGuideModal"
-                style="margin-top: 20px; margin-bottom: 20px; margin-left: 90px;">
-                <div class="plus-icon">+</div>
-                <p>add a guide</p>
-            </div>
-            <h1 style="margin-left: 90px;">Guide</h1>
-            <!-- Fetch and display guide profiles -->
-            <div class="guide-profiles" style="margin-left: 90px;">
-                <?php
-                $guide_query = "SELECT g.guidename, g.guideprofile, u.user_name FROM guide g JOIN users u ON g.user_id = u.id";
-                $guide_result = $con->query($guide_query);
-
-                if ($guide_result && $guide_result->num_rows > 0) {
-                    $count = 0;
-                    while ($guide_row = $guide_result->fetch_assoc()) {
-                        $guide_name = $guide_row['guidename'];
-                        $guide_profile = $guide_row['guideprofile'];
-                        $user_name = $guide_row['user_name'];
-
-                        if ($count % 2 == 0) {
-                            echo '<div class="row" style="margin-bottom: 20px;">';
-                        }
-
-                        echo '<div class="col-md-6">';
-                        echo '<div class="card" style="background-color: #578E7E; color: white; padding: 10px; border-radius: 5px;">';
-                        echo '<img src="../uploads/' . $guide_profile . '" alt="' . $guide_name . '" class="card-img-top" style="border-radius: 5px; width: 100px; height: 100px;">';
-                        echo '<div class="card-body">';
-                        echo '<h5 class="card-title">' . $guide_name . '</h5>';
-                        echo '<p class="card-text">by ' . $user_name . '</p>';
-                        echo '<a href="guide_page.php?guide=' . urlencode($guide_name) . '" class="btn btn-light">View Details</a>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>';
-
-                        if ($count % 2 == 1) {
-                            echo '</div>';
-                        }
-
-                        $count++;
-                    }
-
-                    if ($count % 2 != 0) {
-                        echo '</div>';
-                    }
-                } else {
-                    echo '<p>No guides found.</p>';
-                }
-                ?>
-            </div>
+        <div class="tab-pane fade" id="v-pills-search" role="tabpanel" aria-labelledby="v-pills-search-tab">
+            <h2>Search</h2>
+            <p>Search for your favorite games and guides.</p>
         </div>
-        <!-- Modal -->
-        <div class="modal" id="guideModal">
-            <div class="modal-content">
-                <span class="close-btn" id="closeGuideModal">&times;</span>
-                <form action="create_guide.php" method="POST" enctype="multipart/form-data"
-                    style="display: flex; flex-direction: column; gap: 15px;">
-                    <label style="color: #578E7E; font-weight: bold;">Select Game:</label>
-                    <select name="game_id">
-                        <?php
-                        $result = $con->query("SELECT game_id, gamename FROM gamecommu");
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<option value='{$row['game_id']}'>{$row['gamename']}</option>";
-                        }
-                        ?>
-                    </select>
+        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+            <div class="container mt-4">
+                <h2>Edit User Profile</h2>
+                <form method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <!-- Profile Card -->
+                        <div class="col-md-6">
+                            <div class="profile-card">
+                                <!-- ภาพพื้นหลัง -->
+                                <div class="profile-banner"
+                                    style="background-image: url('../uploads/<?php echo !empty($background_image) ? $background_image : 'default_bg.png'; ?>');">
+                                    <!-- รูปโปรไฟล์ -->
+                                    <img src="../uploads/<?php echo !empty($user_image) ? $user_image : 'default_image.png'; ?>"
+                                        class="rounded-circle profile-image">
 
-                    <label for="guidename" style="color: #578E7E; font-weight: bold;">Guide Name:</label>
-                    <input type="text" name="guidename" id="guidename" class="form-control"
-                        style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;" required>
+                                </div>
 
-                    <label for="guideprofile" style="color: #578E7E; font-weight: bold;">Guide Profile Image:</label>
-                    <input type="file" name="guideprofile" id="guideprofile" class="form-control"
-                        style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;">
+                                <div class="text-center">
+                                    <!-- ข้อมูลโปรไฟล์ -->
+                                    <h5 class="mt-2" style="margin-top: 70px;">
+                                        <?php echo htmlspecialchars($user_name); ?>
+                                    </h5>
+                                    <p><?php echo htmlspecialchars($bio); ?></p>
 
-                    <label for="guideimage" style="color: #578E7E; font-weight: bold;">Guide Image:</label>
-                    <input type="file" name="guideimage" id="guideimage" class="form-control"
-                        style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;">
+                                    <!-- ปุ่มกด -->
 
-                    <label for="guidedescription" style="color: #578E7E; font-weight: bold;">Guide Description:</label>
-                    <textarea name="guidedescription" id="guidedescription" class="form-control"
-                        style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;"></textarea>
+                                    <button type="submit" class="btn btn-success"
+                                        style="margin-bottom: 10px;">Save</button>
+                                </div>
+                            </div>
+                        </div>
 
-                    <button type="submit" class="btn"
-                        style="background-color: #578E7E; color: white; border-radius: 5px; padding: 10px;">Create
-                        Guide</button>
+                        <!-- Bio -->
+                        <div class="col-md-6">
+                            <div class="profile-cardanlter" style="margin-top: 50px;">
+                                <h5>Bio</h5>
+                                <textarea class="form-control" name="bio" rows="13"><?php echo $bio; ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Personal Information -->
+                        <div class="col-md-6 mt-3">
+                            <div class="profile-cardanlter" style="margin-top: 10px;">
+                                <h5>Personal Information</h5>
+                                <label>Full Name</label>
+                                <input type="text" class="form-control mb-2" name="user_name"
+                                    value="<?php echo $user_name; ?>">
+                                <label>Email</label>
+                                <input type="email" class="form-control" name="user_email"
+                                    value="<?php echo $user_email; ?>">
+                            </div>
+                        </div>
+
+                        <!-- Social Media -->
+                        <div class="col-md-6 mt-1">
+                            <div class="profile-cardanlter">
+                                <h5>Social Media</h5>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i data-lucide="twitter"></i></span>
+                                    <input type="text" class="form-control" name="x" value="<?php echo $x; ?>">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i data-lucide="facebook"></i></span>
+                                    <input type="text" class="form-control" name="facebook"
+                                        value="<?php echo $facebook; ?>">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i data-lucide="instagram"></i></span>
+                                    <input type="text" class="form-control" name="instagram"
+                                        value="<?php echo $instagram; ?>">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i data-lucide="youtube"></i></span>
+                                    <input type="text" class="form-control" name="youtube"
+                                        value="<?php echo $youtube; ?>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Upload Images -->
+                        <div class="col-md-12 mt-3">
+                            <div class="profile-cardanlter">
+                                <h5>Update Images</h5>
+                                <label>Profile Picture</label>
+                                <input type="file" class="form-control mb-2" name="image">
+                                <label>Background Image</label>
+                                <input type="file" class="form-control" name="background_image">
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
-
-        <script>
-            // Open and close modal
-            const openGuideModal = document.getElementById("openGuideModal");
-            const closeGuideModal = document.getElementById("closeGuideModal");
-            const guideModal = document.getElementById("guideModal");
-
-            openGuideModal.addEventListener("click", () => {
-                guideModal.style.display = "flex";
-            });
-
-            closeGuideModal.addEventListener("click", () => {
-                guideModal.style.display = "none";
-            });
-
-            window.addEventListener("click", (event) => {
-                if (event.target === guideModal) {
-                    guideModal.style.display = "none";
-                }
-            });
-        </script>
-
-    </div>
-    <div class="tab-pane fade" id="v-pills-search" role="tabpanel" aria-labelledby="v-pills-search-tab">
-        <h2>Search</h2>
-        <p>Search for your favorite games and guides.</p>
-    </div>
-    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-        <div class="container mt-4">
-            <h2>Edit User Profile</h2>
-            <form method="post" enctype="multipart/form-data">
-                <div class="row">
-                    <!-- Profile Card -->
-                    <div class="col-md-6">
-                        <div class="profile-card">
-                            <!-- ภาพพื้นหลัง -->
-                            <div class="profile-banner"
-                                style="background-image: url('../uploads/<?php echo !empty($background_image) ? $background_image : 'default_bg.png'; ?>');">
-                                <!-- รูปโปรไฟล์ -->
-                                <img src="../uploads/<?php echo !empty($user_image) ? $user_image : 'default_image.png'; ?>"
-                                    class="rounded-circle profile-image">
-
-                            </div>
-
-                            <div class="text-center">
-                                <!-- ข้อมูลโปรไฟล์ -->
-                                <h5 class="mt-2" style="margin-top: 70px;">
-                                    <?php echo htmlspecialchars($user_name); ?>
-                                </h5>
-                                <p><?php echo htmlspecialchars($bio); ?></p>
-
-                                <!-- ปุ่มกด -->
-
-                                <button type="submit" class="btn btn-success" style="margin-bottom: 10px;">Save</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bio -->
-                    <div class="col-md-6">
-                        <div class="profile-cardanlter" style="margin-top: 50px;">
-                            <h5>Bio</h5>
-                            <textarea class="form-control" name="bio" rows="13"><?php echo $bio; ?></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <!-- Personal Information -->
-                    <div class="col-md-6 mt-3">
-                        <div class="profile-cardanlter" style="margin-top: 10px;">
-                            <h5>Personal Information</h5>
-                            <label>Full Name</label>
-                            <input type="text" class="form-control mb-2" name="user_name"
-                                value="<?php echo $user_name; ?>">
-                            <label>Email</label>
-                            <input type="email" class="form-control" name="user_email"
-                                value="<?php echo $user_email; ?>">
-                        </div>
-                    </div>
-
-                    <!-- Social Media -->
-                    <div class="col-md-6 mt-1">
-                        <div class="profile-cardanlter">
-                            <h5>Social Media</h5>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i data-lucide="twitter"></i></span>
-                                <input type="text" class="form-control" name="x" value="<?php echo $x; ?>">
-                            </div>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i data-lucide="facebook"></i></span>
-                                <input type="text" class="form-control" name="facebook"
-                                    value="<?php echo $facebook; ?>">
-                            </div>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i data-lucide="instagram"></i></span>
-                                <input type="text" class="form-control" name="instagram"
-                                    value="<?php echo $instagram; ?>">
-                            </div>
-                            <div class="input-group">
-                                <span class="input-group-text"><i data-lucide="youtube"></i></span>
-                                <input type="text" class="form-control" name="youtube" value="<?php echo $youtube; ?>">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <!-- Upload Images -->
-                    <div class="col-md-12 mt-3">
-                        <div class="profile-cardanlter">
-                            <h5>Update Images</h5>
-                            <label>Profile Picture</label>
-                            <input type="file" class="form-control mb-2" name="image">
-                            <label>Background Image</label>
-                            <input type="file" class="form-control" name="background_image">
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 
     </div>
     </div>
