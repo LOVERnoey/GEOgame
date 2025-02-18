@@ -56,6 +56,7 @@ $user_name = isset($_COOKIE['user_name']) ? $_COOKIE['user_name'] : '';
 <head>
 	<title>Login</title>
 	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 		.card {
 			max-width: 800px;
 			margin: 50px auto 0 auto; /* Added top margin */

@@ -71,6 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <head>
 	<title>Signup</title>
 	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
 		body {
 			text-align: center;
 		}
@@ -124,13 +126,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			font-size: 20px;
 			padding: 8px 16px 8px 16px;
 			border-radius: 40px;
-			background-color: #00AAFF;
+			background-color: #578E7E;
 		}
 
 		#button-login {
 			width: 350px;
 			height: 50px;
-			color: #00AAFF;
+			color: #578E7E;
 			border: none;
 			cursor: pointer;
 			margin-top: 10px;
@@ -138,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			font-size: 20px;
 			padding: 8px 16px 8px 16px;
 			border-radius: 40px;
-			border: 1px solid #00AAFF;
+			border: 1px solid #578E7E;
 			background-color: white;
 		}
 
@@ -157,8 +159,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <body>
 
 	<div class="header">
-		<img src="image/iconBB2.png" alt="Budget Buddy">
-		<h1 style="font-size: 40px; margin: 16px 10px 0px 5px;">Budget Buddy</h1>
+		<img src="image/logo.png" alt="Budget Buddy" style="width: 10%; height: 40px;">
+		<h1 style="font-size: 40px; margin: 16px 10px 0px 5px;"></h1>
 	</div>
 	<hr style="width: 100%; color: black">
 
