@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2025 at 04:01 PM
+-- Generation Time: Feb 18, 2025 at 05:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -70,7 +70,8 @@ CREATE TABLE `guide` (
 --
 
 INSERT INTO `guide` (`guide_id`, `guidename`, `guideprofile`, `guiderating`, `guideimage`, `guidedescription`, `user_id`, `game_id`) VALUES
-(1, 'How to open game!!!!!!!!!!!!!', '67b34bfe1a384.jpg', 0, '67b34bfe1a48d.png', 'Do you wanna know how i got into these Game? A lot of Gamer don’t even know how to get into game So i’m Here to tell the \r\ntell from god that whisper in my ear Just Click “PLAY” Button\r\nThat’s it now you can enjoy you beloved game', 1, 1);
+(1, 'How to open game!!!!!!!!!!!!!', '67b34bfe1a384.jpg', 4, '67b34bfe1a48d.png', 'Do you wanna know how i got into these Game? A lot of Gamer don’t even know how to get into game So i’m Here to tell the \r\ntell from god that whisper in my ear Just Click “PLAY” Button\r\nThat’s it now you can enjoy you beloved game', 1, 1),
+(2, 'How to open game!!!!!!!!!!!!!', '67b47992479ca.jpg', 0, '67b4799247af3.jpg', 'dddd', 1, 4);
 
 -- --------------------------------------------------------
 
@@ -100,9 +101,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `user_id`, `user_name`, `password`, `date`, `image`, `county`, `user_email`, `bio`, `x`, `facebook`, `instagram`, `youtube`, `background_image`) VALUES
-(1, 3392, 'bass', '123456', '2025-02-16 15:18:20', '67b1fba5e28f5.gif', '', '', 'GEOgame เป็นเว็บไซต์ที่สร้างขึ้นเพื่อให้ผู้ใช้ได้สนุกกับเกมที่เกี่ยวข้องกับภูมิศาสตร์ พร้อมทั้งเป็นแพลตฟอร์มที่เปิดโอกาสให้ผู้ใช้สามารถจัดการโปรไฟล์ของตนเองได้อย่างอิสระ ไม่ว่าจะเป็นการแก้ไขข้อมูลส่วนตัว อัปโหลดรูปโปรไฟล์ และเพิ่มข้อมูลโซเชียลมีเดียต่างๆ\r\n\r\nเว็บนี้ถูกออกแบบมาให้ใช้งานง่าย มีอินเทอร์เฟซที่สะอาดตาและเป็นมิตรต่อผู้ใช้ รองรับทั้งเดสก์ท็อปและมือถือ เป้าหมายหลักของเราคือการสร้างชุมชนสำหรับคนที่รักการเล่นเกมเชิงการศึกษา รวมถึงให้ผู้ใช้สามารถเชื่อมต่อกับกันและกันผ่านแพลตฟอร์มโซเชียลต่างๆ\r\n\r\nGEOgame ไม่เพียงแต่เป็นแค่เกม แต่ยังเป็นพื้นที่สำหรับการเรียนรู้และพัฒนาทักษะด้านภูมิศาสตร์ไปพร้อมกับความสนุกอีกด้วย', 'L', 'Ratchakit Sriprapai', 'ratcha_skir', 'LOVERnoey', '67b201bcd7061.gif'),
+(1, 3392, 'bass2', '123456', '2025-02-18 12:10:01', '67b1fba5e28f5.gif', '', '', 'GEOgame เป็นเว็บไซต์ที่สร้างขึ้นเพื่อให้ผู้ใช้ได้สนุกกับเกมที่เกี่ยวข้องกับภูมิศาสตร์ พร้อมทั้งเป็นแพลตฟอร์มที่เปิดโอกาสให้ผู้ใช้สามารถจัดการโปรไฟล์ของตนเองได้อย่างอิสระ ไม่ว่าจะเป็นการแก้ไขข้อมูลส่วนตัว อัปโหลดรูปโปรไฟล์ และเพิ่มข้อมูลโซเชียลมีเดียต่างๆ\r\n\r\nเว็บนี้ถูกออกแบบมาให้ใช้งานง่าย มีอินเทอร์เฟซที่สะอาดตาและเป็นมิตรต่อผู้ใช้ รองรับทั้งเดสก์ท็อปและมือถือ เป้าหมายหลักของเราคือการสร้างชุมชนสำหรับคนที่รักการเล่นเกมเชิงการศึกษา รวมถึงให้ผู้ใช้สามารถเชื่อมต่อกับกันและกันผ่านแพลตฟอร์มโซเชียลต่างๆ\r\n\r\nGEOgame ไม่เพียงแต่เป็นแค่เกม แต่ยังเป็นพื้นที่สำหรับการเรียนรู้และพัฒนาทักษะด้านภูมิศาสตร์ไปพร้อมกับความสนุกอีกด้วย', 'L', 'Ratchakit Sriprapai', 'ratcha_skir', 'LOVERnoey', '67b201bcd7061.gif'),
 (2, 220348657821, 'กอล์ฟ', '123456', '2025-02-11 13:58:43', '', '', '', '', '', '', '', '', NULL),
-(3, 40348405639316575, 'กอล์ฟฟ', '123456', '2025-02-13 13:27:06', '67adf32a51e62.jpg', 'Thailand', '', '', '', '', '', '', NULL);
+(3, 40348405639316575, 'bass', '123456', '2025-02-18 12:02:51', '67adf32a51e62.jpg', 'Thailand', '', '', '', '', '', '', '67b476eb7cf5f.jpg');
 
 --
 -- Indexes for dumped tables
@@ -137,13 +138,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `gamecommu`
 --
 ALTER TABLE `gamecommu`
-  MODIFY `game_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `game_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `guide`
 --
 ALTER TABLE `guide`
-  MODIFY `guide_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `guide_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`

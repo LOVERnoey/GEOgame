@@ -152,6 +152,7 @@ $stmt->close();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
         body {
             display: flex;
         }
@@ -729,7 +730,117 @@ $stmt->close();
         </div>
         <div class="tab-pane fade" id="v-pills-search" role="tabpanel" aria-labelledby="v-pills-search-tab">
             <h2>Search</h2>
-            <p>Search for your favorite games and guides.</p>
+            <form method="GET" action="#v-pills-search">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="search_query" placeholder="Search games or guides..."
+                        value="<?php echo isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : ''; ?>">
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </form>
+
+            <?php
+            // If user searches, display matching games/guides
+            if (isset($_GET['search_query']) && !empty($_GET['search_query'])):
+                $search_query = $_GET['search_query'];
+                $search_query = $con->real_escape_string($search_query);
+                ?>
+                <h5>Search Results:</h5>
+
+                <!-- Search in Games -->
+                <?php
+                $search_game_sql = "
+            SELECT game_id, gamename, gameprofile
+            FROM gamecommu
+            WHERE gamename LIKE '%$search_query%'
+        ";
+                $search_game_res = $con->query($search_game_sql);
+
+                if ($search_game_res && $search_game_res->num_rows > 0):
+                    echo '<h6>Games Found:</h6>';
+                    echo '<div class="game-profiles">';
+                    while ($row_game = $search_game_res->fetch_assoc()):
+                        $found_game_id = $row_game['game_id'];
+                        $found_game_name = $row_game['gamename'];
+                        $found_game_profile = $row_game['gameprofile'];
+                        ?>
+                        <div class="game-profile" style="margin-top: 20px; margin-bottom: 20px; margin-left: 20px;">
+                            <a href="game_page.php?game_id=<?php echo urlencode($found_game_id); ?>">
+                                <img src="../uploads/<?php echo htmlspecialchars($found_game_profile); ?>"
+                                    alt="<?php echo htmlspecialchars($found_game_name); ?>" class="game-profile-image">
+                                <h3 class="game-profile-name"><?php echo htmlspecialchars($found_game_name); ?></h3>
+                            </a>
+                        </div>
+                        <?php
+                    endwhile;
+                    echo '</div>';
+                else:
+                    echo '<p>No games found matching your query.</p>';
+                endif;
+                ?>
+
+                <br>
+
+                <!-- Search in Guides -->
+                <?php
+                $search_guide_sql = "
+            SELECT g.guide_id, g.guidename, g.guideprofile, u.user_name
+            FROM guide g
+            JOIN users u ON g.user_id = u.id
+            WHERE g.guidename LIKE '%$search_query%'
+        ";
+                $search_guide_res = $con->query($search_guide_sql);
+
+                if ($search_guide_res && $search_guide_res->num_rows > 0):
+                    echo '<h6>Guides Found:</h6>';
+                    echo '<div class="row" style="margin-left: 5px;">';
+                    $count = 0;
+                    while ($row_guide = $search_guide_res->fetch_assoc()):
+                        $found_guide_id = $row_guide['guide_id'];
+                        $found_guide_name = $row_guide['guidename'];
+                        $found_guide_profile = $row_guide['guideprofile'];
+                        $creator_name = $row_guide['user_name'];
+
+                        // Start new row every 2 guides
+                        if ($count % 2 == 0) {
+                            echo '<div class="row" style="margin-bottom: 20px;">';
+                        }
+                        ?>
+                        <div class="col-md-6">
+                            <div class="card"
+                                style="background-color: #578E7E; color: white; padding: 10px; border-radius: 5px; margin: 10px;">
+                                <img src="../uploads/<?php echo htmlspecialchars($found_guide_profile); ?>"
+                                    alt="<?php echo htmlspecialchars($found_guide_name); ?>" class="card-img-top"
+                                    style="border-radius: 5px; width: 100px; height: 100px;">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?php echo htmlspecialchars($found_guide_name); ?></h5>
+                                    <p class="card-text">by <?php echo htmlspecialchars($creator_name); ?></p>
+                                    <a href="guide_page.php?guide_id=<?php echo urlencode($found_guide_id); ?>"
+                                        class="btn btn-light">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        // End row after 2 guides
+                        if ($count % 2 == 1) {
+                            echo '</div>';
+                        }
+                        $count++;
+                    endwhile;
+
+                    // Close any unclosed row
+                    if ($count % 2 != 0) {
+                        echo '</div>';
+                    }
+                    echo '</div>';
+                else:
+                    echo '<p>No guides found matching your query.</p>';
+                endif;
+                ?>
+                <?php
+            else:
+                echo '<p>Please enter a search query to see matching games or guides.</p>';
+            endif;
+            ?>
         </div>
         <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
             <div class="container mt-4">
@@ -831,6 +942,7 @@ $stmt->close();
 
     </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>

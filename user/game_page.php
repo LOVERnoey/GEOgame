@@ -147,7 +147,7 @@ $stmt->close();
                 <h3>Guides for <?php echo htmlspecialchars($game_data['gamename']); ?></h3>
 
                 <?php
-                $guide_query = "SELECT g.guidename, g.guideprofile, u.user_name FROM guide g 
+                $guide_query = "SELECT g.guide_id, g.guidename, g.guideprofile, u.user_name FROM guide g 
                             JOIN users u ON g.user_id = u.id 
                             WHERE g.game_id = ?";
                 $stmt = $con->prepare($guide_query);
@@ -164,7 +164,7 @@ $stmt->close();
                         echo '<div class="card-body">';
                         echo '<h5 class="card-title">' . htmlspecialchars($guide_row['guidename']) . '</h5>';
                         echo '<p class="card-text">by ' . htmlspecialchars($guide_row['user_name']) . '</p>';
-                        echo '<a href="guide_page.php?guide=' . urlencode($guide_row['guidename']) . '" class="btn btn-light">View Details</a>';
+                        echo '<a href="guide_page.php?guide_id=' . urlencode($guide_row['guide_id']) . '" class="btn btn-light">View Details</a>';
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';
