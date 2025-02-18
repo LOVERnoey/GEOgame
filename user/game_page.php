@@ -9,18 +9,18 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// ตรวจสอบว่ามีการระบุชื่อเกมหรือไม่
-if (!isset($_GET['game'])) {
+// ตรวจสอบว่ามีการระบุ ID เกมหรือไม่
+if (!isset($_GET['game_id'])) {
     header('Location: dashboard.php');
     exit();
 }
 
-$game_name = $_GET['game'];
+$game_id = $_GET['game_id'];
 
 // ดึงข้อมูลเกมจากฐานข้อมูล
-$query = "SELECT * FROM gamecommu WHERE gamename = ? LIMIT 1";
+$query = "SELECT * FROM gamecommu WHERE game_id = ? LIMIT 1";
 $stmt = $con->prepare($query);
-$stmt->bind_param("s", $game_name);
+$stmt->bind_param("i", $game_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -41,53 +41,161 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Info - <?php echo htmlspecialchars($game_data['gamename']); ?></title>
+    <title><?php echo htmlspecialchars($game_data['gamename']); ?> - Game Info</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        .game-info-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: white;
+        /* พื้นหลังเบลอ */
+        .background-container {
+            position: absolute;
+            width: 100%;
+            height: 50vh;
+            background: url('../uploads/<?php echo htmlspecialchars($game_data['gamebg']); ?>') no-repeat center center;
+            background-size: cover;
+            filter: blur(10px);
+            z-index: -1;
         }
 
-        .game-info-header {
+        /* กล่องโปรไฟล์เกม */
+        .game-profile {
+            position: relative;
+            text-align: center;
+            margin-top: -80px;
+        }
+
+        .game-profile img {
+            width: 250px;
+            height: 330px;
+            border-radius: 20px;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 300px;
+        }
+
+        /* ชื่อเกม */
+        .game-title {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* ระบบแท็บ */
+        .tab-container {
             display: flex;
-            align-items: center;
-        }
-
-        .game-info-header img {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            margin-right: 20px;
-        }
-
-        .game-info-content {
+            justify-content: center;
             margin-top: 20px;
         }
 
-        .game-info-content p {
-            margin-bottom: 10px;
+        .tab-container button {
+            background: none;
+            border: none;
+            font-size: 18px;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: gray;
+        }
+
+        .tab-container button.active {
+            color: black;
+            border-bottom: 2px solid black;
+        }
+
+        .tab-content {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .btn-back {
+            margin-top: 100px;
         }
     </style>
 </head>
 
 <body>
-    <div class="game-info-container">
-        <div class="game-info-header">
-            <img src="../uploads/<?php echo htmlspecialchars($game_data['gameprofile']); ?>" alt="<?php echo htmlspecialchars($game_data['gamename']); ?>">
-            <h2><?php echo htmlspecialchars($game_data['gamename']); ?></h2>
+<a href="dashboard.php" class="btn">← Back to Dashboard</a>
+    <!-- ภาพพื้นหลังที่ถูกเบลอ -->
+    <div class="background-container"></div>
+
+    <div class="container">
+        <!-- รูปเกม -->
+        <div class="game-profile">
+            <img src="../uploads/<?php echo htmlspecialchars($game_data['gameprofile']); ?>" alt="Game Profile">
         </div>
-        <div class="game-info-content">
-            <p><strong>Average Game Data:</strong> <?php echo nl2br(htmlspecialchars($game_data['gameavgdata'])); ?></p>
-            <p><strong>Place Available for Sale:</strong> <?php echo nl2br(htmlspecialchars($game_data['gameplaceforsale'])); ?></p>
+
+        <!-- ชื่อเกม -->
+        <div class="game-title"><?php echo htmlspecialchars($game_data['gamename']); ?></div>
+
+        <!-- ระบบแท็บ -->
+        <div class="tab-container">
+            <button class="tab-button active" onclick="showTab('overview')">Overview</button>
+            <button class="tab-button" onclick="showTab('place')">Place for sale</button>
+            <button class="tab-button" onclick="showTab('guide')">Guide</button>
+        </div>
+
+        <!-- เนื้อหาแท็บ -->
+        <div id="overview" class="tab-content">
+            <p><?php echo nl2br(htmlspecialchars($game_data['gameavgdata'])); ?></p>
+        </div>
+        <div id="place" class="tab-content" style="display:none;">
+            <p><?php echo nl2br(htmlspecialchars($game_data['gameplaceforsale'])); ?></p>
+        </div>
+        <div id="guide" class="tab-content" style="display:none;">
+            <div class="guide-section">
+                <h3>Guides for <?php echo htmlspecialchars($game_data['gamename']); ?></h3>
+
+                <?php
+                $guide_query = "SELECT g.guidename, g.guideprofile, u.user_name FROM guide g 
+                            JOIN users u ON g.user_id = u.id 
+                            WHERE g.game_id = ?";
+                $stmt = $con->prepare($guide_query);
+                $stmt->bind_param("i", $game_id);
+                $stmt->execute();
+                $guide_result = $stmt->get_result();
+
+                if ($guide_result && $guide_result->num_rows > 0) {
+                    echo '<div class="row">';
+                    while ($guide_row = $guide_result->fetch_assoc()) {
+                        echo '<div class="col-md-6">';
+                        echo '<div class="card" style="background-color: #578E7E; color: white; padding: 10px; border-radius: 5px;">';
+                        echo '<img src="../uploads/' . htmlspecialchars($guide_row['guideprofile']) . '" alt="' . htmlspecialchars($guide_row['guidename']) . '" class="card-img-top" style="border-radius: 5px; width: 100px; height: 100px;">';
+                        echo '<div class="card-body">';
+                        echo '<h5 class="card-title">' . htmlspecialchars($guide_row['guidename']) . '</h5>';
+                        echo '<p class="card-text">by ' . htmlspecialchars($guide_row['user_name']) . '</p>';
+                        echo '<a href="guide_page.php?guide=' . urlencode($guide_row['guidename']) . '" class="btn btn-light">View Details</a>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+                    }
+                    echo '</div>';
+                } else {
+                    echo '<p>No guides found for this game.</p>';
+                }
+
+                $stmt->close();
+                ?>
+
+            </div>
         </div>
     </div>
+
+    <script>
+        function showTab(tabName) {
+            let tabs = document.getElementsByClassName("tab-content");
+            let buttons = document.getElementsByClassName("tab-button");
+
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].style.display = "none";
+                buttons[i].classList.remove("active");
+            }
+
+            document.getElementById(tabName).style.display = "block";
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+
 </body>
 
 </html>

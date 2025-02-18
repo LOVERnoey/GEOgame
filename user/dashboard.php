@@ -8,6 +8,13 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: ../login.php');
     exit();
 }
+$user_id = $_SESSION['user_id'];
+$stmt = $con->prepare("SELECT user_name, bio, user_email, image, background_image, x, facebook, instagram, youtube FROM users WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
 $user_data = check_login($con);
 $user_id = $user_data['user_id'];
 $user_name = $user_data['user_name'];
@@ -114,8 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $stmt->close();
     }
 }
-$user_name = $user_data['user_name'];
-$user_image = $user_data['image'];
+
 
 $default_image = "../image/dp.png";
 $default_bg = "../image/bg.png";
@@ -129,23 +135,7 @@ if (empty($user_image)) {
 if (empty($background_image)) {
     $background_image = $default_bg;
 }
-// ดึง user_id จาก session
-$user_id = $_SESSION['user_id'];
 
-// ใช้ Prepared Statement เพื่อดึง user_name ตาม user_id
-$query = "SELECT user_name FROM users WHERE user_id = ? LIMIT 1";
-$stmt = $con->prepare($query);
-$stmt->bind_param("s", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// ตรวจสอบว่ามีข้อมูลหรือไม่
-if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $user_name = $row['user_name'];
-} else {
-    $user_name = "ไม่พบข้อมูล";
-}
 
 $stmt->close();
 ?>
@@ -440,17 +430,19 @@ $stmt->close();
                 <!-- Fetch and display game profiles -->
                 <div class="game-profiles">
                     <?php
-                    $game_query = "SELECT gamename, gameprofile FROM gamecommu";
+                    $game_query = "SELECT game_id, gamename, gameprofile FROM gamecommu";
                     $game_result = $con->query($game_query);
 
                     if ($game_result && $game_result->num_rows > 0) {
                         while ($game_row = $game_result->fetch_assoc()) {
+                            $game_id = $game_row['game_id']; // ดึง id ของเกม
                             $game_name = $game_row['gamename'];
                             $game_profile = $game_row['gameprofile'];
+
                             echo '<div class="game-profile" style="margin-top: 20px; margin-bottom: 20px; margin-left: 20px;">';
-                            echo '<a href="game_page.php?game=' . urlencode($game_name) . '">';
-                            echo '<img src="../uploads/' . $game_profile . '" alt="' . $game_name . '" class="game-profile-image">';
-                            echo '<h3 class="game-profile-name">' . $game_name . '</h3>';
+                            echo '<a href="game_page.php?game_id=' . urlencode($game_id) . '">'; // ใช้ game_id แทน gamename
+                            echo '<img src="../uploads/' . htmlspecialchars($game_profile) . '" alt="' . htmlspecialchars($game_name) . '" class="game-profile-image">';
+                            echo '<h3 class="game-profile-name">' . htmlspecialchars($game_name) . '</h3>';
                             echo '</a>';
                             echo '</div>';
                         }
@@ -531,8 +523,7 @@ $stmt->close();
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="v-pills-game" role="tabpanel" aria-labelledby="v-pills-game-tab"
-                style="">
+            <div class="tab-pane fade" id="v-pills-game" role="tabpanel" aria-labelledby="v-pills-game-tab" style="">
                 <h2></h2>
                 <img src="../image/gameheader.png" alt="game header" style="width: 100%; height: 100%;">
                 <div class="add-game-btn" id="openModal"
@@ -544,22 +535,24 @@ $stmt->close();
                 <!-- Fetch and display game profiles -->
                 <div class="game-profiles">
                     <?php
-                    $game_query = "SELECT gamename, gameprofile FROM gamecommu";
+                    $game_query = "SELECT game_id, gamename, gameprofile FROM gamecommu";
                     $game_result = $con->query($game_query);
 
                     if ($game_result && $game_result->num_rows > 0) {
                         while ($game_row = $game_result->fetch_assoc()) {
+                            $game_id = $game_row['game_id']; // ดึง id ของเกม
                             $game_name = $game_row['gamename'];
                             $game_profile = $game_row['gameprofile'];
+
                             echo '<div class="game-profile" style="margin-top: 20px; margin-bottom: 20px; margin-left: 20px;">';
-                            echo '<a href="game_page.php?game=' . urlencode($game_name) . '">';
-                            echo '<img src="../uploads/' . $game_profile . '" alt="' . $game_name . '" class="game-profile-image">';
-                            echo '<h3 class="game-profile-name">' . $game_name . '</h3>';
+                            echo '<a href="game_page.php?game_id=' . urlencode($game_id) . '">'; // ใช้ game_id แทน gamename
+                            echo '<img src="../uploads/' . htmlspecialchars($game_profile) . '" alt="' . htmlspecialchars($game_name) . '" class="game-profile-image">';
+                            echo '<h3 class="game-profile-name">' . htmlspecialchars($game_name) . '</h3>';
                             echo '</a>';
                             echo '</div>';
                         }
                     } else {
-                        echo '<h1>No games found.</h1>';
+                        echo '<p>No games found.</p>';
                     }
                     ?>
                 </div>
@@ -617,8 +610,7 @@ $stmt->close();
                     });
                 </script>
             </div>
-            <div class="tab-pane fade" id="v-pills-guide" role="tabpanel" aria-labelledby="v-pills-guide-tab"
-                style="">
+            <div class="tab-pane fade" id="v-pills-guide" role="tabpanel" aria-labelledby="v-pills-guide-tab" style="">
                 <h2></h2>
                 <img src="../image/guideheader.png" alt="guide header" style="width: 100%; height: 100%;">
                 <div class="add-game-btn" id="openGuideModal"
@@ -630,12 +622,13 @@ $stmt->close();
                 <!-- Fetch and display guide profiles -->
                 <div class="guide-profiles" style="margin-left: 90px;">
                     <?php
-                    $guide_query = "SELECT g.guidename, g.guideprofile, u.user_name FROM guide g JOIN users u ON g.user_id = u.id";
+                    $guide_query = "SELECT g.guide_id, g.guidename, g.guideprofile, u.user_name FROM guide g JOIN users u ON g.user_id = u.id";
                     $guide_result = $con->query($guide_query);
 
                     if ($guide_result && $guide_result->num_rows > 0) {
                         $count = 0;
                         while ($guide_row = $guide_result->fetch_assoc()) {
+                            $guide_id = $guide_row['guide_id'];
                             $guide_name = $guide_row['guidename'];
                             $guide_profile = $guide_row['guideprofile'];
                             $user_name = $guide_row['user_name'];
@@ -650,7 +643,7 @@ $stmt->close();
                             echo '<div class="card-body">';
                             echo '<h5 class="card-title">' . $guide_name . '</h5>';
                             echo '<p class="card-text">by ' . $user_name . '</p>';
-                            echo '<a href="guide_page.php?guide=' . urlencode($guide_name) . '" class="btn btn-light">View Details</a>';
+                            echo '<a href="guide_page.php?guide_id=' . urlencode($guide_id) . '" class="btn btn-light">View Details</a>';
                             echo '</div>';
                             echo '</div>';
                             echo '</div>';
@@ -786,10 +779,10 @@ $stmt->close();
                                 <h5>Personal Information</h5>
                                 <label>Full Name</label>
                                 <input type="text" class="form-control mb-2" name="user_name"
-                                    value="<?php echo $user_name; ?>">
+                                    value="<?php echo htmlspecialchars($user_name); ?>">
                                 <label>Email</label>
                                 <input type="email" class="form-control" name="user_email"
-                                    value="<?php echo $user_email; ?>">
+                                    value="<?php echo htmlspecialchars($user_email); ?>">
                             </div>
                         </div>
 
