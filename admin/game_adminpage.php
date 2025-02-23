@@ -15,11 +15,24 @@ if (!isset($_GET['game_id'])) {
     exit();
 }
 
-$game_id = $_GET['game_id'];
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login.php');
+    exit();
+}
 
+$user_id = $_SESSION['user_id'];
+$user_role = $_SESSION['role'] ?? ''; // role ของผู้ใช้
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login.php');
+    exit();
+}
+
+
+
+$game_id = $_GET['game_id'];
 $query = "SELECT user_id, user_name, user_email, role, image FROM users";
 $result = $con->query($query);
-
 // ดึงข้อมูลเกมจากฐานข้อมูล
 $query = "SELECT * FROM gamecommu WHERE game_id = ? LIMIT 1";
 $stmt = $con->prepare($query);
@@ -34,7 +47,6 @@ if ($result && $result->num_rows > 0) {
     echo "ไม่พบข้อมูลเกม";
     exit();
 }
-
 
 $stmt->close();
 ?>
@@ -119,8 +131,7 @@ $stmt->close();
 </head>
 
 <body>
-
-    <a href="dashboard.php" class="btn">← Back to Dashboard</a>
+    <a href="admindashboard.php" class="btn">← Back to Dashboard</a>
     <!-- ภาพพื้นหลังที่ถูกเบลอ -->
     <div class="background-container"></div>
 
@@ -143,24 +154,17 @@ $stmt->close();
         <!-- เนื้อหาแท็บ -->
         <div id="overview" class="tab-content">
             <p><?php echo nl2br(htmlspecialchars($game_data['gameavgdata'])); ?></p>
-            <?php
-            // ตรวจสอบ role ของผู้ใช้
-            $user_id = $_SESSION['user_id'];
-            $user_role = $_SESSION['role'] ?? ''; // role ของผู้ใช้
-            
-            $is_owner = ($game_data['user_id'] == $user_id); // เป็นเจ้าของเกมหรือไม่
-            $is_admin = ($user_role == 'admin'); // เป็นแอดมินหรือไม่
-            
-            if ($is_owner || $is_admin): ?>
-                <form action="delete_game.php" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ที่จะลบเกมนี้?');">
-                    <input type="hidden" name="game_id" value="<?= htmlspecialchars($game_id) ?>">
-                    <button type="submit" class="btn btn-danger">ลบเกม</button>
-                </form>
-            <?php endif; ?>
-
+            <form action="delete_game.php" method="POST" onsubmit="return confirm('Are you sure to delete this game community?');">
+                <input type="hidden" name="game_id" value="<?= htmlspecialchars($game_id) ?>">
+                <button type="submit" class="btn btn-danger">ลบเกม</button>
+            </form>
         </div>
         <div id="place" class="tab-content" style="display:none;">
             <p><?php echo nl2br(htmlspecialchars($game_data['gameplaceforsale'])); ?></p>
+            <form action="delete_game.php" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ที่จะลบเกมนี้?');">
+                <input type="hidden" name="game_id" value="<?= htmlspecialchars($game_id) ?>">
+                <button type="submit" class="btn btn-danger">ลบเกม</button>
+            </form>
         </div>
         <div id="guide" class="tab-content" style="display:none;">
             <div class="guide-section">
@@ -184,7 +188,7 @@ $stmt->close();
                         echo '<div class="card-body">';
                         echo '<h5 class="card-title">' . htmlspecialchars($guide_row['guidename']) . '</h5>';
                         echo '<p class="card-text">by ' . htmlspecialchars($guide_row['user_name']) . '</p>';
-                        echo '<a href="guide_page.php?guide_id=' . urlencode($guide_row['guide_id']) . '" class="btn btn-light">View Details</a>';
+                        echo '<a href="guide_adminpage.php?guide_id=' . urlencode($guide_row['guide_id']) . '" class="btn btn-light">View Details</a>';
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';
@@ -196,6 +200,11 @@ $stmt->close();
 
                 $stmt->close();
                 ?>
+                <form action="delete_game.php" method="POST"
+                    onsubmit="return confirm('คุณแน่ใจหรือไม่ที่จะลบเกมนี้?');">
+                    <input type="hidden" name="game_id" value="<?= htmlspecialchars($game_id) ?>">
+                    <button type="submit" class="btn btn-danger">ลบเกม</button>
+                </form>
 
             </div>
         </div>

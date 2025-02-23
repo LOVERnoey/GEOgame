@@ -8,42 +8,43 @@ include("functions.php");
 $error_message = "";
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-	//something was posted
-	$user_name = $_POST['user_name'];
-	$password = $_POST['password'];
-	$remember_me = isset($_POST['remember_me']);
+    //something was posted
+    $user_name = $_POST['user_name'];
+    $password = $_POST['password'];
+    $remember_me = isset($_POST['remember_me']);
 
-	if (!empty($user_name) && !empty($password) && !is_numeric($user_name)) {
+    if (!empty($user_name) && !empty($password) && !is_numeric($user_name)) {
 
-		//read from database
-		$query = "select * from users where user_name = '$user_name' limit 1";
-		$result = mysqli_query($con, $query);
+        //read from database
+        $query = "SELECT * FROM users WHERE user_name = '$user_name' LIMIT 1";
+        $result = mysqli_query($con, $query);
 
-		if ($result) {
-			if ($result && mysqli_num_rows($result) > 0) {
+        if ($result && mysqli_num_rows($result) > 0) {
+            $user_data = mysqli_fetch_assoc($result);
 
-				$user_data = mysqli_fetch_assoc($result);
+            if ($user_data['password'] === $password) {
+                $_SESSION['user_id'] = $user_data['user_id'];
+                $_SESSION['user_name'] = $user_data['user_name'];
 
-				if ($user_data['password'] === $password) {
+                if ($remember_me) {
+                    setcookie('user_name', $user_name, time() + (86400 * 30), "/"); // 30 days
+                } else {
+                    setcookie('user_name', '', time() - 3600, "/"); // delete cookie
+                }
 
-					$_SESSION['user_id'] = $user_data['user_id'];
+                if ($user_data['role'] === 'admin') {
+                    header("Location: ./admin/admindashboard.php");
+                } else {
+                    header("Location: ./user/dashboard.php");
+                }
+                exit();
+            }
+        }
 
-					if ($remember_me) {
-						setcookie('user_name', $user_name, time() + (86400 * 30), "/"); // 30 days
-					} else {
-						setcookie('user_name', '', time() - 3600, "/"); // delete cookie
-					}
-
-					header("Location: ./user/dashboard.php");
-					die;
-				}
-			}
-		}
-
-		$error_message = "wrong username or password!";
-	} else {
-		$error_message = "wrong username or password!";
-	}
+        $error_message = "wrong username or password!";
+    } else {
+        $error_message = "wrong username or password!";
+    }
 }
 
 $user_name = isset($_COOKIE['user_name']) ? $_COOKIE['user_name'] : '';
