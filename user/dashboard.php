@@ -8,26 +8,32 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: ../login.php');
     exit();
 }
-$user_id = $_SESSION['user_id'];
-$stmt = $con->prepare("SELECT user_name, bio, user_email, image, background_image, x, facebook, instagram, youtube FROM users WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
 
-$user_data = check_login($con);
-$user_id = $user_data['user_id'];
-$user_name = $user_data['user_name'];
-$password = $user_data['password'];
-$user_image = $user_data['image'];
-$date = $user_data['date'];
-$user_email = $user_data['user_email'];
-$bio = $user_data['bio'];
-$background_image = $user_data['background_image'];
-$x = $user_data['x'];
-$facebook = $user_data['facebook'];
-$instagram = $user_data['instagram'];
-$youtube = $user_data['youtube'];
+$user_data = check_login($con);  // ฟังก์ชัน check_login ควรคืนค่าผู้ใช้หากล็อกอินสำเร็จ
+
+if ($user_data) {
+    // ถ้ามีข้อมูลผู้ใช้
+    $user_id = $user_data['user_id'];
+    $id = $user_data['id'];
+    $user_name = $user_data['user_name'];
+    $password = $user_data['password'];
+    $user_image = $user_data['image'];
+    $date = $user_data['date'];
+    $user_email = $user_data['user_email'];
+    $bio = $user_data['bio'];
+    $background_image = $user_data['background_image'];
+    $x = $user_data['x'];
+    $facebook = $user_data['facebook'];
+    $instagram = $user_data['instagram'];
+    $youtube = $user_data['youtube'];
+} else {
+    // หากไม่พบข้อมูลผู้ใช้
+    echo "User data not found.";
+    // หรือทำการส่งผู้ใช้ไปที่หน้าอื่น เช่น login
+    header("Location: login.php");
+    exit();
+}
+
 
 $default_image = "../image/dp.png";
 
@@ -137,7 +143,6 @@ if (empty($background_image)) {
 }
 
 
-$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -153,6 +158,7 @@ $stmt->close();
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
         body {
             display: flex;
         }
@@ -563,6 +569,7 @@ $stmt->close();
                         <span class="close-btn" id="closeModal">&times;</span>
                         <form action="create_game.php" method="POST" enctype="multipart/form-data"
                             style="display: flex; flex-direction: column; gap: 15px;">
+
                             <label style="color: #578E7E; font-weight: bold;">Game Name:</label>
                             <input type="text" name="gamename" class="form-control"
                                 style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;" required>
@@ -584,8 +591,9 @@ $stmt->close();
                                 style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;"></textarea>
 
                             <button type="submit" class="btn"
-                                style="background-color: #578E7E; color: white; border-radius: 5px; padding: 10px;">Create
-                                Game</button>
+                                style="background-color: #578E7E; color: white; border-radius: 5px; padding: 10px;">
+                                Create Game
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -610,6 +618,7 @@ $stmt->close();
                         }
                     });
                 </script>
+
             </div>
             <div class="tab-pane fade" id="v-pills-guide" role="tabpanel" aria-labelledby="v-pills-guide-tab" style="">
                 <h2></h2>
@@ -739,7 +748,6 @@ $stmt->close();
             </form>
 
             <?php
-            // If user searches, display matching games/guides
             if (isset($_GET['search_query']) && !empty($_GET['search_query'])):
                 $search_query = $_GET['search_query'];
                 $search_query = $con->real_escape_string($search_query);
@@ -749,91 +757,108 @@ $stmt->close();
                 <!-- Search in Games -->
                 <?php
                 $search_game_sql = "
-            SELECT game_id, gamename, gameprofile
-            FROM gamecommu
-            WHERE gamename LIKE '%$search_query%'
+        SELECT game_id, gamename, gameprofile
+        FROM gamecommu
+        WHERE gamename LIKE '%$search_query%'
         ";
                 $search_game_res = $con->query($search_game_sql);
 
                 if ($search_game_res && $search_game_res->num_rows > 0):
                     echo '<h6>Games Found:</h6>';
-                    echo '<div class="game-profiles">';
+                    echo '<div class="row">';
                     while ($row_game = $search_game_res->fetch_assoc()):
                         $found_game_id = $row_game['game_id'];
                         $found_game_name = $row_game['gamename'];
                         $found_game_profile = $row_game['gameprofile'];
                         ?>
-                        <div class="game-profile" style="margin-top: 20px; margin-bottom: 20px; margin-left: 20px;">
-                            <a href="game_page.php?game_id=<?php echo urlencode($found_game_id); ?>">
-                                <img src="../uploads/<?php echo htmlspecialchars($found_game_profile); ?>"
-                                    alt="<?php echo htmlspecialchars($found_game_name); ?>" class="game-profile-image">
-                                <h3 class="game-profile-name"><?php echo htmlspecialchars($found_game_name); ?></h3>
-                            </a>
+                        <div class="col-md-4" style="margin-top: 20px;">
+                            <div class="game-profile">
+                                <a href="game_page.php?game_id=<?php echo urlencode($found_game_id); ?>">
+                                    <img src="../uploads/<?php echo htmlspecialchars($found_game_profile); ?>"
+                                        alt="<?php echo htmlspecialchars($found_game_name); ?>" class="game-profile-image">
+                                    <h3 class="game-profile-name"><?php echo htmlspecialchars($found_game_name); ?></h3>
+                                </a>
+                            </div>
                         </div>
                         <?php
+                        // Fetch and display the guides for each game
+                        $search_guide_sql = "
+                SELECT g.guide_id, g.guidename, g.guideprofile, u.user_name
+                FROM guide g
+                JOIN users u ON g.user_id = u.id
+                WHERE g.game_id = $found_game_id
+                ";
+                        $search_guide_res = $con->query($search_guide_sql);
+
+                        if ($search_guide_res && $search_guide_res->num_rows > 0):
+                            echo '<div class="guide-profiles row" style="margin-top: 20px;">';
+                            while ($row_guide = $search_guide_res->fetch_assoc()):
+                                $found_guide_id = $row_guide['guide_id'];
+                                $found_guide_name = $row_guide['guidename'];
+                                $found_guide_profile = $row_guide['guideprofile'];
+                                $creator_name = $row_guide['user_name'];
+                                ?>
+                                <div class="col-md-6">
+                                    <div class="card"
+                                        style="background-color: #578E7E; color: white; padding: 10px; border-radius: 5px; margin: 10px;">
+                                        <img src="../uploads/<?php echo htmlspecialchars($found_guide_profile); ?>"
+                                            alt="<?php echo htmlspecialchars($found_guide_name); ?>" class="card-img-top"
+                                            style="border-radius: 5px; width: 100px; height: 100px;">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?php echo htmlspecialchars($found_guide_name); ?></h5>
+                                            <p class="card-text">by <?php echo htmlspecialchars($creator_name); ?></p>
+                                            <a href="guide_page.php?guide_id=<?php echo urlencode($found_guide_id); ?>"
+                                                class="btn btn-light">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
+                            endwhile;
+                            echo '</div>';
+                        else:
+                            echo '<p>No guides found for this game.</p>';
+                        endif;
                     endwhile;
                     echo '</div>';
                 else:
-                    echo '<p>No games found matching your query.</p>';
-                endif;
-                ?>
-
-                <br>
-
-                <!-- Search in Guides -->
-                <?php
-                $search_guide_sql = "
+                    echo '<h6>Guides Found:</h6>';
+                    echo '<div class="guide-profiles row" style="margin-left: 20px;">';
+                    // Search in Guides if no games found
+                    $search_guide_sql = "
             SELECT g.guide_id, g.guidename, g.guideprofile, u.user_name
             FROM guide g
             JOIN users u ON g.user_id = u.id
             WHERE g.guidename LIKE '%$search_query%'
-        ";
-                $search_guide_res = $con->query($search_guide_sql);
+            ";
+                    $search_guide_res = $con->query($search_guide_sql);
 
-                if ($search_guide_res && $search_guide_res->num_rows > 0):
-                    echo '<h6>Guides Found:</h6>';
-                    echo '<div class="row" style="margin-left: 5px;">';
-                    $count = 0;
-                    while ($row_guide = $search_guide_res->fetch_assoc()):
-                        $found_guide_id = $row_guide['guide_id'];
-                        $found_guide_name = $row_guide['guidename'];
-                        $found_guide_profile = $row_guide['guideprofile'];
-                        $creator_name = $row_guide['user_name'];
-
-                        // Start new row every 2 guides
-                        if ($count % 2 == 0) {
-                            echo '<div class="row" style="margin-bottom: 20px;">';
-                        }
-                        ?>
-                        <div class="col-md-6">
-                            <div class="card"
-                                style="background-color: #578E7E; color: white; padding: 10px; border-radius: 5px; margin: 10px;">
-                                <img src="../uploads/<?php echo htmlspecialchars($found_guide_profile); ?>"
-                                    alt="<?php echo htmlspecialchars($found_guide_name); ?>" class="card-img-top"
-                                    style="border-radius: 5px; width: 100px; height: 100px;">
-                                <div class="card-body">
-                                    <h5 class="card-title"><?php echo htmlspecialchars($found_guide_name); ?></h5>
-                                    <p class="card-text">by <?php echo htmlspecialchars($creator_name); ?></p>
-                                    <a href="guide_page.php?guide_id=<?php echo urlencode($found_guide_id); ?>"
-                                        class="btn btn-light">View Details</a>
+                    if ($search_guide_res && $search_guide_res->num_rows > 0):
+                        while ($row_guide = $search_guide_res->fetch_assoc()):
+                            $found_guide_id = $row_guide['guide_id'];
+                            $found_guide_name = $row_guide['guidename'];
+                            $found_guide_profile = $row_guide['guideprofile'];
+                            $creator_name = $row_guide['user_name'];
+                            ?>
+                            <div class="col-md-6">
+                                <div class="card"
+                                    style="background-color: #578E7E; color: white; padding: 10px; border-radius: 5px; margin: 10px;">
+                                    <img src="../uploads/<?php echo htmlspecialchars($found_guide_profile); ?>"
+                                        alt="<?php echo htmlspecialchars($found_guide_name); ?>" class="card-img-top"
+                                        style="border-radius: 5px; width: 100px; height: 100px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?php echo htmlspecialchars($found_guide_name); ?></h5>
+                                        <p class="card-text">by <?php echo htmlspecialchars($creator_name); ?></p>
+                                        <a href="guide_page.php?guide_id=<?php echo urlencode($found_guide_id); ?>"
+                                            class="btn btn-light">View Details</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <?php
-                        // End row after 2 guides
-                        if ($count % 2 == 1) {
-                            echo '</div>';
-                        }
-                        $count++;
-                    endwhile;
-
-                    // Close any unclosed row
-                    if ($count % 2 != 0) {
-                        echo '</div>';
-                    }
+                            <?php
+                        endwhile;
+                    else:
+                        echo '<p>No guides found matching your query.</p>';
+                    endif;
                     echo '</div>';
-                else:
-                    echo '<p>No guides found matching your query.</p>';
                 endif;
                 ?>
                 <?php
@@ -842,6 +867,7 @@ $stmt->close();
             endif;
             ?>
         </div>
+
         <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
             <div class="container mt-4">
                 <h2>Edit User Profile</h2>
@@ -862,7 +888,10 @@ $stmt->close();
                                 <div class="text-center">
                                     <!-- ข้อมูลโปรไฟล์ -->
                                     <h5 class="mt-2" style="margin-top: 70px;">
-                                        <?php echo htmlspecialchars($user_name); ?>
+                                        <?php echo $user_name; ?>
+                                    </h5>
+                                    <h5 class="mt-2" style="margin-top: 70px;">
+                                        <?php echo $_SESSION['user_id'];  // ตรวจสอบว่าผู้ใช้ล็อกอินอยู่หรือไม่ ?>
                                     </h5>
                                     <p><?php echo htmlspecialchars($bio); ?></p>
 
@@ -890,7 +919,7 @@ $stmt->close();
                                 <h5>Personal Information</h5>
                                 <label>Full Name</label>
                                 <input type="text" class="form-control mb-2" name="user_name"
-                                    value="<?php echo htmlspecialchars($user_name); ?>">
+                                    value="<?php echo $user_name; ?>">
                                 <label>Email</label>
                                 <input type="email" class="form-control" name="user_email"
                                     value="<?php echo htmlspecialchars($user_email); ?>">
