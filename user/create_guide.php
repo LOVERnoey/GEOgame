@@ -14,17 +14,6 @@ if ($user_data) {
     // ถ้ามีข้อมูลผู้ใช้
     $user_id = $user_data['user_id'];
     $id = $user_data['id'];
-    $user_name = $user_data['user_name'];
-    $password = $user_data['password'];
-    $user_image = $user_data['image'];
-    $date = $user_data['date'];
-    $user_email = $user_data['user_email'];
-    $bio = $user_data['bio'];
-    $background_image = $user_data['background_image'];
-    $x = $user_data['x'];
-    $facebook = $user_data['facebook'];
-    $instagram = $user_data['instagram'];
-    $youtube = $user_data['youtube'];
 } else {
     // หากไม่พบข้อมูลผู้ใช้
     echo "User data not found.";
@@ -41,13 +30,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $guideprofile = "default_guide.png";
     $guideimage = "default_guide_img.png";
 
+    // Allowed file extensions
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+    // Function to display Bootstrap alert
+    function show_alert($message, $alert_type = 'danger') {
+        echo "<div class='alert alert-$alert_type' role='alert'>$message</div>";
+    }
+
     // Handle guide profile image upload
     if (!empty($_FILES['guideprofile']['name'])) {
         $file = $_FILES['guideprofile'];
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+        if (in_array($ext, $allowed_extensions)) {
             $guideprofile = uniqid() . '.' . $ext;
             move_uploaded_file($file['tmp_name'], '../uploads/' . $guideprofile);
+        } else {
+            show_alert("Error: Invalid file type for guide profile image. Only JPG, JPEG, PNG, and GIF are allowed.");
+            exit();
         }
     }
 
@@ -55,9 +55,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_FILES['guideimage']['name'])) {
         $file = $_FILES['guideimage'];
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+        if (in_array($ext, $allowed_extensions)) {
             $guideimage = uniqid() . '.' . $ext;
             move_uploaded_file($file['tmp_name'], '../uploads/' . $guideimage);
+        } else {
+            show_alert("Error: Invalid file type for guide image. Only JPG, JPEG, PNG, and GIF are allowed.");
+            exit();
         }
     }
 
@@ -71,15 +74,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: dashboard.php");
         exit();
     } else {
-        echo "Error: " . $stmt->error;
+        show_alert("Error: " . $stmt->error);
     }
 }
 ?>
 
-<!-- ในส่วน HTML ของ dashboard.php -->
-<?php if (isset($_SESSION['guide_created']) && $_SESSION['guide_created'] == true): ?>
-    <script>
-        alert('Guide created successfully');
-    </script>
-    <?php unset($_SESSION['guide_created']); ?> <!-- ลบ session หลังจากแสดงผล -->
-<?php endif; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Guide</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2>Create Guide</h2>
+        <form action="create_guide.php" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
+            <label style="color: #578E7E; font-weight: bold;">Guide Name:</label>
+            <input type="text" name="guidename" class="form-control" style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;" required>
+
+            <label style="color: #578E7E; font-weight: bold;">Guide Profile Image:</label>
+            <input type="file" name="guideprofile" class="form-control" style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;">
+
+            <label style="color: #578E7E; font-weight: bold;">Guide Image:</label>
+            <input type="file" name="guideimage" class="form-control" style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;">
+
+            <label style="color: #578E7E; font-weight: bold;">Guide Description:</label>
+            <textarea name="guidedescription" class="form-control" style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;"></textarea>
+
+            <label style="color: #578E7E; font-weight: bold;">Game ID:</label>
+            <input type="number" name="game_id" class="form-control" style="border: 1px solid #578E7E; border-radius: 5px; padding: 10px;" required>
+
+            <button type="submit" class="btn" style="background-color: #578E7E; color: white; border-radius: 5px; padding: 10px;">
+                Create Guide
+            </button>
+        </form>
+    </div>
+</body>
+</html>

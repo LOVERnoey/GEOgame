@@ -36,17 +36,27 @@ $gamename = $_POST['gamename'];
 $gameavgdata = $_POST['gameavgdata'];
 $gameplaceforsale = $_POST['gameplaceforsale'];
 
-
 $gameprofile = "default_game.png";
 $gamebg = "default_bg.png";
+
+// Allowed file extensions
+$allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+// Function to display Bootstrap alert
+function show_alert($message, $alert_type = 'danger') {
+    echo "<div class='alert alert-$alert_type' role='alert'>$message</div>";
+}
 
 // Handle profile image upload
 if (!empty($_FILES['gameprofile']['name'])) {
     $file = $_FILES['gameprofile'];
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+    if (in_array($ext, $allowed_extensions)) {
         $gameprofile = uniqid() . '.' . $ext;
         move_uploaded_file($file['tmp_name'], '../uploads/' . $gameprofile);
+    } else {
+        show_alert("Error: Invalid file type for profile image. Only JPG, JPEG, PNG, and GIF are allowed.");
+        exit();
     }
 }
 
@@ -54,9 +64,12 @@ if (!empty($_FILES['gameprofile']['name'])) {
 if (!empty($_FILES['gamebg']['name'])) {
     $file = $_FILES['gamebg'];
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+    if (in_array($ext, $allowed_extensions)) {
         $gamebg = uniqid() . '.' . $ext;
         move_uploaded_file($file['tmp_name'], '../uploads/' . $gamebg);
+    } else {
+        show_alert("Error: Invalid file type for background image. Only JPG, JPEG, PNG, and GIF are allowed.");
+        exit();
     }
 }
 
@@ -69,5 +82,18 @@ if ($stmt->execute()) {
     header("Location: dashboard.php");
     exit();
 } else {
-    echo "Error: " . $stmt->error;
+    show_alert("Error: " . $stmt->error);
 }
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+</body>
+</html>

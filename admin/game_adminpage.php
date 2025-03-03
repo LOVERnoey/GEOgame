@@ -156,14 +156,14 @@ $stmt->close();
             <p><?php echo nl2br(htmlspecialchars($game_data['gameavgdata'])); ?></p>
             <form action="delete_game.php" method="POST" onsubmit="return confirm('Are you sure to delete this game community?');">
                 <input type="hidden" name="game_id" value="<?= htmlspecialchars($game_id) ?>">
-                <button type="submit" class="btn btn-danger">ลบเกม</button>
+                <button type="submit" class="btn btn-danger">Delete Game Community</button>
             </form>
         </div>
         <div id="place" class="tab-content" style="display:none;">
             <p><?php echo nl2br(htmlspecialchars($game_data['gameplaceforsale'])); ?></p>
-            <form action="delete_game.php" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ที่จะลบเกมนี้?');">
+            <form action="delete_game.php" method="POST" onsubmit="return confirm('Are you sure to delete this game community?');">
                 <input type="hidden" name="game_id" value="<?= htmlspecialchars($game_id) ?>">
-                <button type="submit" class="btn btn-danger">ลบเกม</button>
+                <button type="submit" class="btn btn-danger">Delete Game Community</button>
             </form>
         </div>
         <div id="guide" class="tab-content" style="display:none;">
@@ -201,9 +201,9 @@ $stmt->close();
                 $stmt->close();
                 ?>
                 <form action="delete_game.php" method="POST"
-                    onsubmit="return confirm('คุณแน่ใจหรือไม่ที่จะลบเกมนี้?');">
+                    onsubmit="return confirm('Are you sure to delete this game community?');">
                     <input type="hidden" name="game_id" value="<?= htmlspecialchars($game_id) ?>">
-                    <button type="submit" class="btn btn-danger">ลบเกม</button>
+                    <button type="submit" class="btn btn-danger">Delete Game Community</button>
                 </form>
 
             </div>
