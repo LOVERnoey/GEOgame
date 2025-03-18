@@ -70,9 +70,6 @@ GEOgame is a web-based platform designed to offer insights and recommendations a
 2. Register a new account or log in with existing credentials.
 3. Explore the features such as viewing game lists, creating guides, and rating content.
 
-## Contributing
-
-Contributions are welcome! Please fork the repository and create a pull request with your changes.
 
 ## License
 
